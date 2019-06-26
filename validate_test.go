@@ -1,24 +1,22 @@
-package validate_test
+package validate
 
 import (
 	"testing"
-
-	"github.com/Away0x/validate"
 )
 
 type User struct {
-	validate.BaseValidate
+	BaseValidate
 	Name string
 	Age  int
 }
 
 type user2 User
 
-func (u *user2) Validators() validate.Validators {
-	return validate.Validators{
+func (u *user2) Validators() Validators {
+	return Validators{
 		"name": {
-			validate.RequiredValidator(u.Name),
-			validate.MinLengthValidator(u.Name, 3),
+			RequiredValidator(u.Name),
+			MinLengthValidator(u.Name, 3),
 		},
 		"age": {
 			func() string {
@@ -36,11 +34,11 @@ type user3 User
 func (*user3) IsStrict() bool {
 	return false
 }
-func (u *user3) Validators() validate.Validators {
-	return validate.Validators{
+func (u *user3) Validators() Validators {
+	return Validators{
 		"name": {
-			validate.RequiredValidator(u.Name),
-			validate.MinLengthValidator(u.Name, 3),
+			RequiredValidator(u.Name),
+			MinLengthValidator(u.Name, 3),
 		},
 		"age": {
 			func() string {
@@ -55,15 +53,15 @@ func (u *user3) Validators() validate.Validators {
 
 type user4 User
 
-func (u *user4) Validators() validate.Validators {
-	return validate.Validators{
+func (u *user4) Validators() Validators {
+	return Validators{
 		"name": {
-			validate.RequiredValidator(u.Name),
+			RequiredValidator(u.Name),
 		},
 	}
 }
-func (u *user4) Messages() validate.Messages {
-	return validate.Messages{
+func (u *user4) Messages() Messages {
+	return Messages{
 		"name": {
 			"用户名必须存在",
 		},
@@ -72,10 +70,10 @@ func (u *user4) Messages() validate.Messages {
 
 type user5 User
 
-func (u *user5) Plugins() validate.Plugins {
-	return validate.Plugins{
-		func() (string, []validate.ValidatorFunc, []string) {
-			return "name", []validate.ValidatorFunc{validate.RequiredValidator(u.Name)}, []string{"用户名必须存在"}
+func (u *user5) Plugins() Plugins {
+	return Plugins{
+		func() (string, []ValidatorFunc, []string) {
+			return "name", []ValidatorFunc{RequiredValidator(u.Name)}, []string{"用户名必须存在"}
 		},
 	}
 }
@@ -87,7 +85,7 @@ func TestValidate(t *testing.T) {
 		Age:  18,
 	}
 
-	if _, ok := validate.Run(u); !ok {
+	if _, ok := Run(u); !ok {
 		t.Error("u validate error")
 	}
 
@@ -97,7 +95,7 @@ func TestValidate(t *testing.T) {
 		Age:  7,
 	}
 
-	if msg, ok := validate.Run(u2); !ok {
+	if msg, ok := Run(u2); !ok {
 		if m, ok2 := msg["age"]; ok2 {
 			t.Error("u2 age msg error " + m[0])
 		}
@@ -111,7 +109,7 @@ func TestValidate(t *testing.T) {
 		Age:  7,
 	}
 
-	if msg, ok := validate.Run(u3); !ok {
+	if msg, ok := Run(u3); !ok {
 		if m, ok2 := msg["name"]; !ok2 {
 			t.Error("u3 name msg error")
 		} else {
@@ -136,7 +134,7 @@ func TestValidate(t *testing.T) {
 		Name: "abcd",
 		Age:  11,
 	}
-	if _, ok := validate.Run(u31); !ok {
+	if _, ok := Run(u31); !ok {
 		t.Error("u31 validate error")
 	}
 
@@ -144,7 +142,7 @@ func TestValidate(t *testing.T) {
 	u4 := &user4{
 		Name: "",
 	}
-	if msg, ok := validate.Run(u4); !ok {
+	if msg, ok := Run(u4); !ok {
 		if m, ok2 := msg["name"]; !ok2 {
 			t.Error("u4 name msg error")
 		} else {
@@ -160,7 +158,7 @@ func TestValidate(t *testing.T) {
 	u5 := &user5{
 		Name: "",
 	}
-	if msg, ok := validate.Run(u5); !ok {
+	if msg, ok := Run(u5); !ok {
 		if m, ok2 := msg["name"]; !ok2 {
 			t.Error("u5 name msg error")
 		} else {
@@ -174,10 +172,10 @@ func TestValidate(t *testing.T) {
 
 	// --------------
 	u6 := &User{Name: ""}
-	if msg, ok := validate.RunWithConfig(u6, validate.Config{
-		Plugins: validate.Plugins{
-			func() (string, []validate.ValidatorFunc, []string) {
-				return "name", []validate.ValidatorFunc{validate.RequiredValidator(u6.Name)}, []string{"用户名必须存在"}
+	if msg, ok := RunWithConfig(u6, Config{
+		Plugins: Plugins{
+			func() (string, []ValidatorFunc, []string) {
+				return "name", []ValidatorFunc{RequiredValidator(u6.Name)}, []string{"用户名必须存在"}
 			},
 		},
 	}); !ok {
