@@ -136,6 +136,15 @@ func RunWithConfig(v Validater, config Config) (errMap Messages, ok bool) {
 	return runValidate(strict, validatorMap, messageMap)
 }
 
+// AssignPlugin 为一个 plugin 添加更多 validators 和 messages
+func AssignPlugin(pluginFunc PluginFunc, otherValidators []ValidatorFunc, otherMessages []string) (string, []ValidatorFunc, []string) {
+	key, validators, messages := pluginFunc()
+	validators = append(validators, otherValidators...)
+	messages = append(messages, otherMessages...)
+
+	return key, validators, messages
+}
+
 // 执行验证
 func runValidate(strict bool, validatorMap Validators, messageMap Messages) (errMap Messages, ok bool) {
 	errMap = make(Messages)
