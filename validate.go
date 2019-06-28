@@ -48,27 +48,27 @@ func (msg Messages) Error() string {
 	return val.String()
 }
 
-// BaseValidate -
-type BaseValidate struct{}
+// Base -
+type Base struct{}
 
 // IsStrict 是否为严格模式
-func (*BaseValidate) IsStrict() bool {
+func (*Base) IsStrict() bool {
 	return true
 }
 
 // Validators : 注册验证器
 // 验证器数组按顺序验证，一旦验证没通过，即结束该字段的验证
-func (*BaseValidate) Validators() Validators {
+func (*Base) Validators() Validators {
 	return Validators{}
 }
 
 // Messages 注册错误信息
-func (*BaseValidate) Messages() Messages {
+func (*Base) Messages() Messages {
 	return Messages{}
 }
 
 // Plugins 注册 plugin
-func (*BaseValidate) Plugins() Plugins {
+func (*Base) Plugins() Plugins {
 	return nil
 }
 

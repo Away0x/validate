@@ -7,7 +7,7 @@
 
 ```go
 type loginForm struct {
-	validate.BaseValidate
+	validate.Base
 	Email    string
 	Password string
 }
@@ -94,7 +94,7 @@ func PasswordPlugin(password string) validate.PluginFunc {
 ```
 ```go
 type loginForm struct {
-	validate.BaseValidate
+	validate.Base
 	Email    string
 	Password string
 }
@@ -135,7 +135,7 @@ if errMap, ok := validate.Run(form); !ok {
 ## withConfig example
 ```go
 type loginForm struct {
-	validate.BaseValidate
+	validate.Base
 	Email    string
 	Password string
 }

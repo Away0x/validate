@@ -5,7 +5,7 @@ import (
 )
 
 type User struct {
-	BaseValidate
+	Base
 	Name string
 	Age  int
 }
