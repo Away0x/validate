@@ -103,8 +103,8 @@ func (*loginForm) IsStrict() bool {
 	return false
 }
 
-func (f *loginForm) Plugins() []validate.PluginFunc {
-	return []validate.PluginFunc{
+func (f *loginForm) Plugins() validate.Plugins {
+	return validate.Plugins{
 		EmailPlugin(f.Email),
 		PasswordPlugin(f.Password),
 	}
